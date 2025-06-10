@@ -27,8 +27,10 @@ on:
 jobs:
   Run_upstream_merge_and_test_script:
     runs-on: self-hosted
+
     steps:
       - name: Checkout current branch
+        if: ${{ inputs.skip_merge == 'False' }}
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -43,5 +45,10 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
+          if [ "${{ inputs.skip_merge }}" = "True" ]; then
+            echo "Skipping checkout, using pre-cloned repo"
+            cd /home/tonks/dev/CommitSentience/actions-runner/_work/nilrt/nilrt
+          fi
+
           echo "Running script: ${{ inputs.filename }}"
           python3 "${{ inputs.filename }}" -w "${{ inputs.workItemID }}" -s "${{ inputs.skip_merge }}"
