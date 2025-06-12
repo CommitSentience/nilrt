@@ -27,19 +27,16 @@ on:
 jobs:
   Run_upstream_merge_and_test_script:
     runs-on: self-hosted
+
     steps:
       - name: Checkout current branch
+        if: ${{ inputs.skip_merge == 'False' }}
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
-
-      - name: Increase swap space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 10
 
       - name: Set Git pull behavior
         run: git config pull.rebase false
@@ -48,5 +45,10 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
+          if [ "${{ inputs.skip_merge }}" = "True" ]; then
+            echo "Skipping checkout, using pre-cloned repo"
+            cd /home/tonks/dev/CommitSentience/actions-runner/_work/nilrt/nilrt
+          fi
+
           echo "Running script: ${{ inputs.filename }}"
           python3 "${{ inputs.filename }}" -w "${{ inputs.workItemID }}" -s "${{ inputs.skip_merge }}"
