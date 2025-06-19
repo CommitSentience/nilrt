@@ -158,6 +158,9 @@ This will eliminate the need for every user to set up a VM just to execute the s
     - fork_name
     - fork_url
 
+### **`upstream_merge.py`**
+- Contains helper functions for merging submodules with their respective upstream repositories.
+
 ### **`build.py`**
 - Handles the process of building images.  
 - Key steps include:
@@ -171,6 +174,11 @@ This will eliminate the need for every user to set up a VM just to execute the s
   - Restoring the VM to a specific snapshot.
   - Installing and testing safemode and runmode images.
   - Verifying the OS version.
+
+### **`push_and_PR.py`**
+- Handles pushing the merged changes to the downstream fork repository.
+- Automates the creation of a pull request (PR) on GitHub after a successful merge and build.
+- Uses the GitHub CLI or API to generate PRs with appropriate titles, descriptions, and checklists.
 
 ### ** `json_config.py`**
 - Handles reading and validating the configuration file (`automation_conf.json`).
